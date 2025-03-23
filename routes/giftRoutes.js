@@ -5,13 +5,20 @@ const router = express.Router();
 
 
 // Get all gifts
-router.get("/get", async(req, res)=>{
+router.get("/", async(req, res)=>{
     const gifts = await Gift.find();
     res.json(gifts)
 })
 
 // Get single gift
-router.get("/get/:id")
+router.get("/:email", async(req, res)=>{
+    const email = req.params.email;
+    const gift = await Gift.findOne({email: email});
+    if(!gift){
+        return res.status(404).json({ message: "No gift found for this email" });
+    }
+    res.json(gift)
+})
 
 
 
@@ -25,7 +32,7 @@ router.post("/create", async(req, res)=>{
 
 
 // Edit gift
-router.put("/update/:id", async(req, res)=>{
+router.patch("/update/:id", async(req, res)=>{
 
 })
 
