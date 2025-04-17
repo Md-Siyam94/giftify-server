@@ -42,8 +42,10 @@ app.use("/giftify/gifts", giftRoutes)
 app.use("/giftify/users", userRoutes)
 
 
-
-
+// root route:
+app.get("/", (req, res) => {
+  res.send("Giftify backend is up and running!");
+});
 
 
 app.listen(port, () => {
