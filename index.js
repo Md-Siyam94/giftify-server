@@ -11,6 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 
+
 // giftifyDB
 // aClNzHq2JRqU3sj3
 
@@ -22,12 +23,12 @@ mongoose.connect(`mongodb+srv://${process.env.USER_NAME}:${process.env.DB_KEY}@c
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(res=> {
-  console.log("MongoDB connected");
-})
-.catch(err=>{
-  console.log("error from db", err);
-})
+  .then(res => {
+    console.log("MongoDB connected");
+  })
+  .catch(err => {
+    console.log("error from db", err);
+  })
 
 
 // Import Rotues
