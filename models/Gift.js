@@ -16,7 +16,7 @@ const GiftSchema = new mongoose.Schema({
         price: {
                 type: Number,
         },
-        cetegory: {
+        category: {
                 type: String,
                 required: true
         },
@@ -31,11 +31,11 @@ const GiftSchema = new mongoose.Schema({
         }
 
 
-},{timestamps: true}
+}, { timestamps: true }
 );
 
 
 
- const Gift = mongoose.model("Gift", GiftSchema);
+const Gift = mongoose.model("Gift", GiftSchema);
 
 module.exports = Gift
