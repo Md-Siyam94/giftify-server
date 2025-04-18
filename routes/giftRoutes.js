@@ -34,6 +34,20 @@ router.post("/create", async (req, res) => {
 // Edit gift
 router.patch("/update/:id", async (req, res) => {
 
+    // below code is added by Hafiz
+    const updatedGift = await Gift.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true } // returning the updated document
+    );
+
+    if (!updatedGift) {
+        return res.status(404).json({ success: false, message: "Gift not found" });
+    }
+
+    res.json({ success: true, data: updatedGift });
+    // above code is added by Hafiz
+
 })
 
 // Delelte gift

@@ -20,6 +20,13 @@ const GiftSchema = new mongoose.Schema({
                 type: String,
                 required: true
         },
+        image: {
+                type: String,
+                required: true
+        },
+        rating: {
+                type: Number // optional by default
+        },
         createdBy: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User"
