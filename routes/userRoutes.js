@@ -4,6 +4,13 @@ const { default: mongoose } = require("mongoose")
 
 const router = express.Router();
 
+//  Counting all user
+router.get("/admin-stats", async (req, res) => {
+        const totalUser = await User.estimatedDocumentCount();
+        res.send({  totalUser });
+
+});
+
 // get all user
 router.get("/", async(req, res)=>{
         const users = await User.find();
