@@ -16,6 +16,7 @@ app.use(express.json())
 // aClNzHq2JRqU3sj3
 
 //  console.log(process.env.MONGOOSE_URI);
+ console.log(process.env.MONGOOSE_URI);
 
 
 // mongoose connection
