@@ -4,6 +4,13 @@ const Gift = require("../models/Gift")
 const router = express.Router();
 
 
+router.get("/admin-stats", async (req, res) => {
+    const totalGift = await Gift.estimatedDocumentCount();
+    res.send({  totalGift });
+
+});
+
+
 // Get all gifts
 router.get("/", async (req, res) => {
     const gifts = await Gift.find();
@@ -62,5 +69,15 @@ router.delete("/delete/:id", async (req, res) => {
     // above code is added by Hafiz
 
 })
+
+// Latest Gift
+router.get("/latest", async (req, res) => {
+    try {
+        const latestGifts = await Gift.find().sort({ createdAt: -1 }).limit(4);
+        res.json(latestGifts);
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 module.exports = router
