@@ -35,31 +35,31 @@ router.post("/create", async (req, res) => {
 router.get("/:email", async (req, res) => {
         const email = req.params.email;
         try {
-            const user = await User.findOne({ email });
-            if (!user) return res.status(404).json({ message: "User not found" });
-            res.json(user);
+                const user = await User.findOne({ email });
+                if (!user) return res.status(404).json({ message: "User not found" });
+                res.json(user);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+                res.status(500).json({ error: error.message });
         }
-    });
-    
+});
+
 // Update a user by Id
 router.patch("/update/:id", async (req, res) => {
         try {
                 const updatedUser = await User.findByIdAndUpdate(
-                    req.params.id,
-                    { $set: req.body },
-                    { new: true } 
+                        req.params.id,
+                        { $set: req.body },
+                        { new: true }
                 );
-        
+
                 if (!updatedUser) {
-                    return res.status(404).json({ success: false, message: "User not found" });
+                        return res.status(404).json({ success: false, message: "User not found" });
                 }
-        
+
                 res.json({ success: true, data: updatedUser });
-            } catch (error) {
+        } catch (error) {
                 res.status(500).json({ success: false, error: error.message });
-            }
+        }
 })
 // delete a user
 router.delete("/delete/:id", async (req, res) => {

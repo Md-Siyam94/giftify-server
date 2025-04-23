@@ -8,17 +8,20 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
     },
+    role: {
+        type: String,
+    },
     image: {
         type: String,
     },
     phone: {
-        type:String
+        type: String
     },
     address: {
-        type:String,
+        type: String,
     },
     website: {
-        type:String
+        type: String
     },
 
 
