@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const app = express()
 require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -49,6 +50,16 @@ app.use("/giftify/carts", cartRoutes)
 app.get("/", (req, res) => {
   res.send("Giftify backend is up and running!");
 });
+
+// JWT RElated Api
+app.post("/giftify/jwt", (req,res)=>{
+  const user=req.body;
+  const token=jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h"
+  });
+  res.send({token})
+
+})
 
 
 app.listen(port, () => {
