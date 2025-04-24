@@ -2,8 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const app = express()
+const app = express();
 require("dotenv").config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
 
@@ -52,14 +53,31 @@ app.get("/", (req, res) => {
 });
 
 // JWT RElated Api
-app.post("/giftify/jwt", (req,res)=>{
-  const user=req.body;
-  const token=jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+app.post("/giftify/jwt", (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1h"
   });
-  res.send({token})
+  res.send({ token })
 
 })
+
+// stripe payment apis
+app.post('/create-payment-intent', async (req, res) => {
+  const { price } = req.body;
+  const amount = parseInt(price * 100);
+  console.log(amount, 'amount inside the intent');
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: 'usd',
+    payment_method_types: ['card']
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret
+  })
+});
 
 
 app.listen(port, () => {
