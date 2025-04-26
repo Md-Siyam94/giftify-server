@@ -36,8 +36,9 @@ mongoose.connect(`mongodb+srv://${process.env.USER_NAME}:${process.env.DB_KEY}@c
 
 // Import Rotues
 const giftRoutes = require('./routes/giftRoutes');
-const userRoutes = require('./routes/userRoutes')
-const cartRoutes = require('./routes/cartRoutes')
+const userRoutes = require('./routes/userRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 
 
@@ -45,6 +46,7 @@ const cartRoutes = require('./routes/cartRoutes')
 app.use("/giftify/gifts", giftRoutes)
 app.use("/giftify/users", userRoutes)
 app.use("/giftify/carts", cartRoutes)
+app.use("/giftify/payments", paymentRoutes)
 
 
 // root route:
