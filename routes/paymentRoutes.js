@@ -52,4 +52,17 @@ router.post("/create", async (req, res) => {
 
 
 
+// DELETE all payments for a specific user
+router.delete("/clear/:email", async (req, res) => {
+    const email = req.params.email;
+    const result = await Payment.deleteMany({ email: email });
+    if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "No payment found to delete" });
+    }
+    res.json({ success: true, message: "Payment cleared", deletedCount: result.deletedCount });
+});
+
+
+
+
 module.exports = router
