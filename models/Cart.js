@@ -22,6 +22,18 @@ const CartSchema = new mongoose.Schema({
     price: {
         type: Number,
     },
+    quantity: {
+        type: Number,
+    },
+    sender: {
+        type: String,
+    },
+    message: {
+        type: String,
+    },
+    receiver: {
+        type: String,
+    },
     category: {
         type: String,
         required: true
