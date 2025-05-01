@@ -64,6 +64,29 @@ app.post("/giftify/jwt", (req, res) => {
 
 })
 
+// Middleware or, Verify token
+const verifyToken= (req,res,next)=>{
+  console.log("Inside Verify token", req.headers.authorization)
+  if(!req.headers.authorization){
+    return res.status(401).send({message: "UnAthorized Access"})
+  }
+  const token=req.headers.authorization.split(' ')[1];
+  if(!token){
+    return res.status(401).send({message: "UnAthorized Access"})
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err,decoded)=>{
+    if(err){
+      return res.status(401).send({message: "UnAthorized Access"})
+    }
+    req.decoded=decoded;
+    next();
+
+  } )
+  // next()
+
+}
+
+
 // stripe payment apis
 app.post('/create-payment-intent', async (req, res) => {
   const { price } = req.body;
