@@ -5,6 +5,30 @@ const Cart = require('../models/Cart');
 
 
 const router = express.Router();
+// Get total earnings
+router.get("/total-earnings", async (req, res) => {
+    try {
+      const payments = await Payment.find();
+  
+      if (!payments || payments.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "No payments found to calculate earnings" });
+      }
+  
+      const totalEarnings = payments.reduce(
+        (sum, payment) => sum + (payment.price || 0),
+        0
+      );
+  
+      res.json({ totalEarnings });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  });
+  
+  
+
 
 
 // Get all payments for a specific user
@@ -20,7 +44,6 @@ router.get("/:email", async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
-
 
 
 // Posting a payment
