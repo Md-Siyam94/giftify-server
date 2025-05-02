@@ -26,6 +26,32 @@ router.get("/total-earnings", async (req, res) => {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   });
+  // Monthly earnings endpoint
+router.get("/monthly-earnings", async (req, res) => {
+    try {
+      const monthlyEarnings = await Payment.aggregate([
+        {
+          $group: {
+            _id: { $month: "$createdAt" }, // group by month
+            total: { $sum: "$price" }
+          }
+        },
+        {
+          $project: {
+            month: "$_id",
+            total: 1,
+            _id: 0
+          }
+        },
+        { $sort: { month: 1 } }
+      ]);
+  
+      res.json(monthlyEarnings);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  });
+  
   
   
 
