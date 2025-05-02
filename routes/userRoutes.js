@@ -1,5 +1,6 @@
 const express = require("express")
 const User = require('../models/User')
+const Payment = require('../models/Payment');
 const { default: mongoose } = require("mongoose")
 
 const router = express.Router();
@@ -14,56 +15,71 @@ router.get("/admin-stats", async (req, res) => {
 // FOr Analytic counting user in monthly~~~~~~~~~~~~~~~~~
 router.get('/monthly-users', async (req, res) => {
         try {
-            const currentYear = new Date().getFullYear();
-    
-            const monthlyData = await User.aggregate([
-                {
-                    $match: {
-                        createdAt: {
-                            $gte: new Date(`${currentYear}-01-01`),
-                            $lte: new Date(`${currentYear}-12-31`)
+                const currentYear = new Date().getFullYear();
+
+                const monthlyData = await User.aggregate([
+                        {
+                                $match: {
+                                        createdAt: {
+                                                $gte: new Date(`${currentYear}-01-01`),
+                                                $lte: new Date(`${currentYear}-12-31`)
+                                        }
+                                }
+                        },
+                        {
+                                $group: {
+                                        _id: { $month: "$createdAt" },
+                                        total: { $sum: 1 }
+                                }
+                        },
+                        {
+                                $sort: { "_id": 1 }
                         }
-                    }
-                },
-                {
-                    $group: {
-                        _id: { $month: "$createdAt" },
-                        total: { $sum: 1 }
-                    }
-                },
-                {
-                    $sort: { "_id": 1 }
-                }
-            ]);
-    
-            // Fill missing months with 0
-            const fullData = Array.from({ length: 12 }, (_, i) => {
-                const found = monthlyData.find(item => item._id === i + 1);
-                return {
-                    name: new Date(0, i).toLocaleString('default', { month: 'short' }),
-                    users: found ? found.total : 0
-                };
-            });
-    
-            res.json(fullData);
+                ]);
+
+                // Fill missing months with 0
+                const fullData = Array.from({ length: 12 }, (_, i) => {
+                        const found = monthlyData.find(item => item._id === i + 1);
+                        return {
+                                name: new Date(0, i).toLocaleString('default', { month: 'short' }),
+                                users: found ? found.total : 0
+                        };
+                });
+
+                res.json(fullData);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+                res.status(500).json({ error: err.message });
         }
-    });
+});
 
+// Get Purchasing user for Analytics Pie api
+router.get("/purchase-stats", async (req, res) => {
+        try {
+                const totalUsers = await User.countDocuments();
+                const usersWithPurchase = await Payment.distinct("email");
+                const totalPurchased = usersWithPurchase.length;
+                const totalNotPurchased = totalUsers - totalPurchased;
+                res.json({
+                        purchased: totalPurchased,
+                        notPurchased: totalNotPurchased,
+                        total: totalUsers
+                });
+        } catch (err) {
+                res.status(500).json({ error: err.message });
+        }
+});
 
-// End Off~~~~~~~~~~~~~~~~~~~~~~~
 // // Get latest 3 users
 router.get("/latest-users", async (req, res) => {
         try {
-            const latestUsers = await User.find()
-                .sort({ createdAt: -1 }) 
-                .limit(3);
-            res.json(latestUsers);
+                const latestUsers = await User.find()
+                        .sort({ createdAt: -1 })
+                        .limit(3);
+                res.json(latestUsers);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+                res.status(500).json({ error: err.message });
         }
-    });
+});
 
 // get all user
 router.get("/", async (req, res) => {
